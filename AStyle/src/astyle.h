@@ -747,6 +747,7 @@ private:  // functions
 	bool isNextCharOpeningBracket(int startChar) const;
 	bool isOkToBreakBlock(BracketType bracketType) const;
 	bool isOperatorPaddingDisabled() const;
+	bool isForEach(const std::string& followingText) const;
 	bool pointerSymbolFollows() const;
 	int  getCurrentLineCommentAdjustment();
 	int  getNextLineCommentAdjustment();

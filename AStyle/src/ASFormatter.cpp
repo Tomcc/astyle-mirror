@@ -322,6 +322,12 @@ void ASFormatter::buildLanguageVectors()
 	ASResource::buildIndentableMacros(indentableMacros);	//ASEnhancer
 }
 
+bool ASFormatter::isForEach(const std::string& followingText) const 
+{
+	assert(currentHeader);
+	return *currentHeader == ASResource::AS_FOR ? followingText.find(':') != std::string::npos : false;
+}
+
 /**
  * set the variables for each predefined style.
  * this will override any previous settings.
@@ -2809,9 +2815,10 @@ bool ASFormatter::isPointerOrReference() const
 	if (currentChar == '&' && nextChar == '&')
 	{
 		string followingText = peekNextText(currentLine.substr(charNum + 2));
+		
 		if (followingText.length() > 0 && followingText[0] == ')')
 			return true;
-		if (currentHeader != NULL || isInPotentialCalculation)
+		if ( (currentHeader != NULL && !isForEach(followingText)) || isInPotentialCalculation)
 			return false;
 		if (parenStack->back() > 0 && isBracketType(bracketTypeStack->back(), COMMAND_TYPE))
 			return false;
