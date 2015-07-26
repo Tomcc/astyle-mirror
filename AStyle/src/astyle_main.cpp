@@ -2727,6 +2727,9 @@ void ASOptions::parseOption(const string& arg, const string& errorInfo)
 			formatter.setTabIndentation(spaceNum, false);
 		}
 	}
+	else if ( isParamOption(arg, "u", "uniform-instatement-indentation") ) {
+		formatter.setUniformInstatementIndentation();
+	}
 	else if ( isOption(arg, "indent=tab") )
 	{
 		formatter.setTabIndentation(4);

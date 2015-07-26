@@ -365,6 +365,7 @@ public:
 	void setSpaceIndentation(int length = 4);
 	void setSwitchIndent(bool state);
 	void setTabIndentation(int length = 4, bool forceTabs = false);
+	void setUniformInstatementIndentation();
 	void setPreprocDefineIndent(bool state);
 	void setPreprocConditionalIndent(bool state);
 	int  getBeautifierFileType() const;
@@ -523,6 +524,7 @@ private:  // variables
 	bool isInConditional;
 	bool isModeManuallySet;
 	bool shouldForceTabIndentation;
+	bool uniformInstatementIndentation;
 	bool emptyLineFill;
 	bool backslashEndsPrevLine;
 	bool lineOpensWithLineComment;

@@ -59,6 +59,7 @@ ASBeautifier::ASBeautifier()
 	sourceIterator = NULL;
 	isModeManuallySet = false;
 	shouldForceTabIndentation = false;
+	uniformInstatementIndentation = false;
 	setSpaceIndentation(4);
 	setMinConditionalIndentOption(MINCOND_TWO);
 	setMaxInStatementIndentLength(40);
@@ -215,6 +216,7 @@ ASBeautifier::ASBeautifier(const ASBeautifier& other) : ASBase(other)
 	isInConditional = other.isInConditional;
 	isModeManuallySet = other.isModeManuallySet;
 	shouldForceTabIndentation = other.shouldForceTabIndentation;
+	uniformInstatementIndentation = other.uniformInstatementIndentation;
 	emptyLineFill = other.emptyLineFill;
 	lineOpensWithLineComment = other.lineOpensWithLineComment;
 	lineOpensWithComment = other.lineOpensWithComment;
@@ -500,6 +502,13 @@ void ASBeautifier::setTabIndentation(int length, bool forceTabs)
 	indentString = "\t";
 	indentLength = length;
 	shouldForceTabIndentation = forceTabs;
+}
+
+/** 
+ * indent instatements by incrementing the column by 1, always, rather than indenting to the break point
+ */
+void ASBeautifier::setUniformInstatementIndentation() {
+	uniformInstatementIndentation = true;
 }
 
 /**
@@ -1247,6 +1256,15 @@ string ASBeautifier::preLineWS(int lineIndentCount, int lineSpaceIndentCount) co
 void ASBeautifier::registerInStatementIndent(const string& line, int i, int spaceTabCount_,
                                              int tabIncrementIn, int minIndent, bool updateParenStack)
 {
+	if (uniformInstatementIndentation) {
+		static string lastLine;
+		if (lastLine == line)
+			return;
+		else
+			lastLine = line;
+		updateParenStack = true;
+	}
+
 	int inStatementIndent;
 	int remainingCharNum = line.length() - i;
 	int nextNonWSChar = getNextProgramCharDistance(line, i);
@@ -1279,7 +1297,10 @@ void ASBeautifier::registerInStatementIndent(const string& line, int i, int spac
 			tabIncrement += convertTabToSpaces(j, tabIncrement);
 	}
 
-	inStatementIndent = i + nextNonWSChar + spaceTabCount_ + tabIncrement;
+	if (uniformInstatementIndentation)
+		inStatementIndent = parenIndentStack->size() * 4;
+	else
+		inStatementIndent = i + nextNonWSChar + spaceTabCount_ + tabIncrement;
 
 	// check for run-in statement
 	if (i > 0 && line[0] == '{')
