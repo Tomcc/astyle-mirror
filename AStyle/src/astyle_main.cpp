@@ -2727,7 +2727,8 @@ void ASOptions::parseOption(const string& arg, const string& errorInfo)
 			formatter.setTabIndentation(spaceNum, false);
 		}
 	}
-	else if ( isParamOption(arg, "u", "uniform-instatement-indentation") ) {
+	else if ( isParamOption(arg, "U", "uniform-instatement-indentation") ) 
+	{
 		formatter.setUniformInstatementIndentation();
 	}
 	else if ( isOption(arg, "indent=tab") )
@@ -2878,7 +2879,7 @@ void ASOptions::parseOption(const string& arg, const string& errorInfo)
 	{
 		formatter.setParensHeaderPaddingMode(true);
 	}
-	else if ( isOption(arg, "U", "unpad-paren") )
+	else if ( isOption(arg, "", "unpad-paren") )
 	{
 		formatter.setParensUnPaddingMode(true);
 	}
